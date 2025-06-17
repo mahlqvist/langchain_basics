@@ -61,7 +61,8 @@ Examples on how it might look:
 * `examples/chat_model_basic.py` – Chat with a language model.
 * `examples/prompt_template_demo.py` – Build prompts dynamically.
 * `examples/output_parser_example.py` – Extract structured output.
-* `examples/agent_tool_use.py` – Let an agent decide what to do.
+* `examples/document_loaders.py` – Load documents from a variety of sources.
 * `examples/vectorstore_retrieval.py` – Search documents with semantic meaning.
+* `examples/agent_tool_use.py` – Let an agent decide what to do.
 
 I'm building this to understand how LangChain works under the hood and how to use its components in a flexible, modular way. My goal is to master practical tools for building AI-powered apps.

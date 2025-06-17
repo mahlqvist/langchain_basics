@@ -10,22 +10,23 @@ This repo contains small, focused experiments to help me understand how to use L
 - **LLMs & Chat Models** – working with OpenAI and other language models.
 - **Prompt Templates** – structuring reusable, dynamic prompts.
 - **Output Parsers** – extracting structured data from language model responses.
+- **Document Loaders** - load data from PDFs or URLs into a Document objects.
+- **Chains** – connecting multiple steps together into workflows.
 - **Text Splitters** – breaking large documents into chunks for processing.
 - **Vector Stores** – storing and searching text using embeddings (e.g. FAISS, ChromaDB).
-- **Retrieval** – querying external documents with context-aware answers.
 - **Memory** – maintaining conversation history across interactions.
+- **Retrieval** – querying external documents with context-aware answers.
 - **Agents & Tools** – building autonomous chains that make decisions and call tools.
-- **Chains** – connecting multiple steps together into workflows.
+
 
 ### Project Structure
 
 ```
 langchain_basics/
 │
-├── notebooks/         # Jupyter notebooks for quick experiments
-├── examples/          # Simple Python scripts by concept
-├── prompts/           # Custom prompt templates
 ├── data/              # Sample input documents
+├── examples/          # Simple Python scripts by concept
+├── notebooks/         # Jupyter notebooks for quick experiments
 ├── requirements.txt   # Python dependencies
 └── README.md          # You're here!
 ```

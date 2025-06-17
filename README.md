@@ -62,6 +62,8 @@ Examples on how it might look:
 * `examples/prompt_template_demo.py` – Build prompts dynamically.
 * `examples/output_parser_example.py` – Extract structured output.
 * `examples/document_loaders.py` – Load documents from a variety of sources.
+* `examples/text_splitters.py` – Split text into small, semantically meaningful chunks.
+* `examples/embedding_models.py` – Generate vector representations.
 * `examples/vectorstore_retrieval.py` – Search documents with semantic meaning.
 * `examples/agent_tool_use.py` – Let an agent decide what to do.
 

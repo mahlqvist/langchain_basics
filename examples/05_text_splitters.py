@@ -1,9 +1,7 @@
 import os
-import re
 from langchain_community.document_loaders import UnstructuredPDFLoader, WebBaseLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
-import sys
 
 pdf_file_path = os.path.join(os.getcwd(), "data", "machine_minds.pdf")
 
@@ -12,13 +10,12 @@ pdf_file_path = os.path.join(os.getcwd(), "data", "machine_minds.pdf")
 loader = UnstructuredPDFLoader(
 	pdf_file_path,
 	mode="elements",
-	infer_table_structure=True,
-	strategy="fast"  # Faster processing with decent accuracy
+	infer_table_structure=True
 )
 raw_pdf_docs = loader.load()
 
 # Preprocess: Filter empty docs
-filtered_docs = [doc for doc in raw_pdf_docs if doc.page_content and len(doc.page_content.strip()) > 5]
+filtered_pdf_docs = [doc for doc in raw_pdf_docs if doc.page_content and len(doc.page_content.strip()) > 5]
 
 web_loader = WebBaseLoader(
     web_path="https://www.uu.se/en/centre/crb/news/archive/2024-09-23-exploring-artificial-consciousness-drawing-inspiration-from-the-human-brain",
@@ -46,7 +43,7 @@ text_splitter = RecursiveCharacterTextSplitter(
 	is_separator_regex=False
 )
 
-pdf_chunks = text_splitter.split_documents(filtered_docs)
+pdf_chunks = text_splitter.split_documents(filtered_pdf_docs)
 web_chunks = text_splitter.split_documents(web_docs)
 
 

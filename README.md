@@ -27,6 +27,7 @@ langchain_basics/
 ├── data/              # Sample input documents
 ├── examples/          # Simple Python scripts by concept
 ├── notebooks/         # Jupyter notebooks for quick experiments
+├── notes/             # Notes to delve deeper into topics
 ├── requirements.txt   # Python dependencies
 └── README.md          # You're here!
 ```

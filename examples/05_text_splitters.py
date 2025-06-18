@@ -3,8 +3,8 @@ from langchain_community.document_loaders import UnstructuredPDFLoader, WebBaseL
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
 
-pdf_file_path = os.path.join(os.getcwd(), "data", "machine_minds.pdf")
 
+pdf_file_path = os.path.join(os.getcwd(), "data", "machine_minds.pdf")
 
 # Load PDF with metadata preservation
 loader = UnstructuredPDFLoader(
@@ -33,7 +33,6 @@ sections = [s.strip() for s in text.split("\n\n") if s.strip()]
 # Convert to Documents and apply recursive splitting
 web_docs = [Document(page_content=s, metadata=raw_web_docs[0].metadata) for s in sections]
 
-
 # Create a CharacterTextSplitter with specific configuration:
 text_splitter = RecursiveCharacterTextSplitter(
 	chunk_size=600,  # Reduced for better embedding quality
@@ -45,7 +44,6 @@ text_splitter = RecursiveCharacterTextSplitter(
 
 pdf_chunks = text_splitter.split_documents(filtered_pdf_docs)
 web_chunks = text_splitter.split_documents(web_docs)
-
 
 # Define a function to display document statistics
 def display_document_stats(docs, name):

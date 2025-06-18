@@ -2,10 +2,10 @@ import os
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 
+
 env_path = os.path.join(os.getcwd(), "config", ".env")
 
 _ = load_dotenv(dotenv_path=env_path)
-
 
 api_key = os.getenv("OPENAI_API_KEY")
 
@@ -53,7 +53,6 @@ Lily has 4 times as many apples as Tom. Together, they have 50 apples. How many 
 Provide three independent calculations and explanations, then determine the most consistent result.
 """
 }
-
 
 for name, prompt in prompts.items():
 	response = llm.invoke(prompt)

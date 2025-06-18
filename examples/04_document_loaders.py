@@ -11,6 +11,7 @@ import os
 import re
 from langchain_community.document_loaders import PyPDFLoader, WebBaseLoader, UnstructuredPDFLoader
 
+
 pdf_file_path = os.path.join(os.getcwd(), "data", "machine_minds.pdf")
 
 # Using the PyPDFLoader
@@ -26,8 +27,6 @@ for i in range(2):
      print(f"Document: {i+1}\n")
      print(f"Metadata: {documents[i].metadata}\n")
      print(f"Content: {documents[i].page_content[:100]}...\n\n")
-
-
 
 # Using WebBaseLoader
 web_loader = WebBaseLoader("https://www.uu.se/en/centre/crb/news/archive/2024-09-23-exploring-artificial-consciousness-drawing-inspiration-from-the-human-brain")
@@ -52,7 +51,6 @@ web_data = {
 
 print(f"SOURCE: {web_data['metadata']['source']}")
 print(f"CONTENT: {web_data['content'][:100]}")
-
 
 # Using UnstructuredPDFLoader to extract images and tables
 adv_pdf_loader = UnstructuredPDFLoader(

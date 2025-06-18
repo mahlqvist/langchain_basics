@@ -4,6 +4,7 @@ from langchain_openai import ChatOpenAI
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 
+
 env_path = os.path.join(os.getcwd(), "config", ".env")
 
 _ = load_dotenv(dotenv_path=env_path)

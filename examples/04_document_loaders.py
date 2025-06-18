@@ -22,8 +22,11 @@ pages = []
 documents = pdf_loader.load()
 
 # Inspect the extracted documents
-for doc in documents:
-	print(f"Type: {doc.metadata['category']}, Content: {doc.page_content[:100]}...")
+for i in range(2):
+     print(f"Document: {i+1}\n")
+     print(f"Metadata: {documents[i].metadata}\n")
+     print(f"Content: {documents[i].page_content[:100]}...\n\n")
+
 
 
 # Using WebBaseLoader

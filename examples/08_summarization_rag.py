@@ -8,8 +8,8 @@ from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
-from langchain_community.vectorstores import Chroma
-from langchain.chains import RetrievalQA
+from datetime import datetime as dt
+from langchain_core.documents import Document
 from dotenv import load_dotenv
 import uuid
 import chromadb
@@ -37,16 +37,15 @@ embeddings = OpenAIEmbeddings(
 
 url = 'https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/6JDbUb_L3egv_eOkouY71A.txt'
 
-url2 = "https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/XVnuuEg94sAE4S_xAsGxBA.txt"
-
 file_name = "company_policies.txt"
 
 file_path = os.path.join(os.getcwd(), "data", file_name)
 
 def download_file(url, file_path=None, return_data=None):
+	"""Downloads a file from a given URL with options to save to disk or return as data."""
 	headers = {
 		'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-		'Accept': '*/*',  # Accepts ANY file type
+		'Accept': '*/*',
 		'Connection': 'keep-alive',
 		'Accept-Encoding': 'identity' 
 	}
@@ -85,6 +84,25 @@ if not os.path.isfile(file_path):
 loader = TextLoader(file_path)
 documents = loader.load()
 
+def enhance_document_metadata(doc: Document, url: str, file_path: str):
+    """Enriches a LangChain document with comprehensive metadata."""
+    file_stats = os.stat(file_path)
+    
+    doc.metadata.update({
+        'source': file_name,
+        'source_url': url,
+        'file_size': file_stats.st_size,
+        'file_created': file_stats.st_ctime,
+        'file_modified': file_stats.st_mtime,
+        'download_method': 'http',
+        'processing_date': dt.now().isoformat()
+    })
+    return doc
+
+# Add/modify metadata for each document
+for doc in documents:
+    enhance_document_metadata(doc, url, file_path)
+
 text_splitter = RecursiveCharacterTextSplitter(
 	chunk_size=800,  
 	chunk_overlap=0,
@@ -120,12 +138,23 @@ def chroma_retriever(query: str, k: int=5):
 	
 	return results
 
-template = """Use the information from the document to answer the question at the end. If you don't have enough information to answer the question do not try to make up an answer.
+template = """You are an AI assistant.
+
+Your task is to interpret the query and use this context to factually answer the next question. Let the user know if you do not have enough information or context to answer a specific question.
+
+If you don't have enough information to answer the question do not try to make up an answer.
  
 Context: {context}
-Question: {question}"""
+"""
 
-prompt = ChatPromptTemplate.from_template(template)
+#prompt = ChatPromptTemplate.from_template(template)
+
+prompt = ChatPromptTemplate.from_messages(
+        [
+            ("system", template),
+            ("human", "{question}")
+        ]
+)
 
 rag_chain = (
     {"context": chroma_retriever, "question": RunnablePassthrough()}
@@ -135,5 +164,5 @@ rag_chain = (
 )
 
 # Usage
-response = rag_chain.invoke("Can I eat in company vehicles?")
+response = rag_chain.invoke("Can you summarize this document for me?")
 print(response)

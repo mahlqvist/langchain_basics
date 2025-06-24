@@ -81,37 +81,36 @@ def download_file(url, file_path=None, return_data=None):
 if not os.path.isfile(file_path):
 	download_file(url, file_path)
 
-loader = TextLoader(file_path)
-documents = loader.load()
+def text_loader(file_name: str, title: str):
 
-def enhance_document_metadata(doc: Document, url: str, file_path: str):
-    """Enriches a LangChain document with comprehensive metadata."""
-    file_stats = os.stat(file_path)
-    
-    doc.metadata.update({
-        'source': file_name,
-        'source_url': url,
-        'file_size': file_stats.st_size,
-        'file_created': file_stats.st_ctime,
-        'file_modified': file_stats.st_mtime,
-        'download_method': 'http',
-        'processing_date': dt.now().isoformat()
-    })
-    return doc
+	file_path = os.path.join(os.getcwd(), "data", file_name)
+	loader = TextLoader(file_path)
+	documents = loader.load()
+	
+	for doc in documents:
+		doc.metadata.update({'source': file_name, 'title': title})
+		doc.metadata = {k: v for k, v in doc.metadata.items() if k in ["source", "title"]}
 
-# Add/modify metadata for each document
-for doc in documents:
-    enhance_document_metadata(doc, url, file_path)
+	return documents
+
+docs = text_loader(file_name, "Company Policies")
 
 text_splitter = RecursiveCharacterTextSplitter(
-	chunk_size=800,  
-	chunk_overlap=0,
-	length_function=len,
-	separators=["\n\n", "\n", ". ", "? ", "! ", " ", ""], 
-	is_separator_regex=False
+	chunk_size=800,
+	chunk_overlap=100,
+	separators=[
+		r"(?<=[.?!])\s+(?=[A-Z])",
+		"\n\n",
+		"\n",
+		" ",
+		""
+	],
+	is_separator_regex=True,
+	keep_separator=True,
+	strip_whitespace=True
 )
 
-text_chunks = text_splitter.split_documents(documents)
+text_chunks = text_splitter.split_documents(docs)
 
 vector_db = chromadb.PersistentClient(path="./chroma_test_storage")
 
@@ -119,15 +118,17 @@ policy_collection = vector_db.get_or_create_collection(name="company_policies")
 
 documents = [chunk.page_content for chunk in text_chunks]
 document_vectors = embeddings.embed_documents(documents)
+metadatas = [chunk.metadata for chunk in text_chunks]
+ids = [str(uuid.uuid4()) for _ in text_chunks]
 
 policy_collection.upsert(
 	documents=documents, 
 	embeddings=document_vectors,
-	metadatas=[chunk.metadata for chunk in text_chunks],  
-	ids=[str(uuid.uuid4()) for _ in text_chunks]
+	metadatas=metadatas,  
+	ids=ids
 )
 
-def chroma_retriever(query: str, k: int=5):
+def chroma_retriever(query: str, k: int=10):
 	query_vector = embeddings.embed_query(query)
 	
 	results = policy_collection.query(
@@ -164,5 +165,5 @@ rag_chain = (
 )
 
 # Usage
-response = rag_chain.invoke("Can you summarize this document for me?")
+response = rag_chain.invoke("Can I eat in the company car?")
 print(response)

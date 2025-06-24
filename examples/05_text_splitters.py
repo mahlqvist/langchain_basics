@@ -54,7 +54,6 @@ def web_loader(web_url):
 
     return web_docs
 
-
 web_docs = web_loader("https://www.uu.se/en/centre/crb/news/archive/2024-09-23-exploring-artificial-consciousness-drawing-inspiration-from-the-human-brain")
 
 # Create a CharacterTextSplitter with specific configuration:
@@ -62,7 +61,7 @@ text_splitter = RecursiveCharacterTextSplitter(
 	chunk_size=800,  # Reduced for better embedding quality
 	chunk_overlap=100,  # Added overlap for context continuity
 	length_function=len,
-	separators=["\n\n", "."],  # Prioritize sentence breaks
+	separators=["\n\n\n", "\n\n", ".", "!", "?", " ", ""],  # Prioritize sentence breaks
 	is_separator_regex=False
 )
 

@@ -1,34 +1,27 @@
-def download_file(url, file_path=None, return_data=None):
-	headers = {
-		'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-		'Accept': '*/*',  # Accepts ANY file type
-		'Connection': 'keep-alive',
-		'Accept-Encoding': 'identity' 
-	}
-	try:
-		response = requests.get(url, headers=headers, stream=True, timeout=30)
-		response.raise_for_status()
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
 
-		if return_data and not file_path:
-			# Buffer to store downloaded bytes
-			chunks = []
+# Jupyter Notebook
+.ipynb_checkpoints
 
-			# Download content in chunks
-			for chunk in response.iter_content(chunk_size=8192):
-				if chunk:  # filter out keep-alive chunks
-					chunks.append(chunk)
+# Virtual Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 
-			# Combine all chunks into one bytes object
-			data_bytes = b''.join(chunks)
+# Configuration Files
+config/
 
-			data = codecs.decode(data_bytes, 'utf-8')
-			return data
+# Visual Studio Code
+.vscode/* 
+.history
 
-		with open(file_path, 'wb') as fh:
-			for chunk in response.iter_content(chunk_size=8192):
-				if chunk:
-					fh.write(chunk)
-
-		print("File downloaded successfully!")
-	except requests.exceptions.RequestException as e:
-		logging.error(f"Error downloading file: {e}")
+# Logs and databases
+*.log
+*.sqlite3

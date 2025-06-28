@@ -147,8 +147,6 @@ If you don't have enough information to answer the question do not try to make u
 Context: {context}
 """
 
-#prompt = ChatPromptTemplate.from_template(template)
-
 prompt = ChatPromptTemplate.from_messages(
         [
             ("system", template),
